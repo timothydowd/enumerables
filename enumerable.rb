@@ -48,12 +48,44 @@ module Enumerable
 
   end
 
+  def my_all?
+    return self.to enum unless block_given?
+    if self.class == Hash
+      items = Hash.new
+      self.my_each do |k,v|#for each key and value of object
+        items[k] = v if yield(k,v) # create key and val if block is true
+      end
+      items == self ? true : false
 
+    else
+      items = []
+      self.my_each do |i| #for each item in self object
+        items.push(i) if yield(i) #add i to items array if block is true
+      end
+      items == self ? true : false
+    end
+
+  end
+
+  def my_any?
+    return self.to enum unless block_given?
+    if self.class == Hash
+       self.each{|k,v| return true if (k,v) == yield(k,v)}
+
+    else
+
+        return true if self.each{|i|} == yield(i)
+
+
+    end
+
+
+  end
 
   people = {"John" => 10, "Bob" => 7, "Sam" => 47, "Fred" => 34}
   nums = [3,5,7,3,6,10,20,16]
 
-  puts people.my_select{|y|y=="Bob"}
+  puts nums.my_any?{|x|x>20}
 
 
 
