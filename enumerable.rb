@@ -156,7 +156,8 @@ module Enumerable
     total = 0
     if args[0].class == Symbol
       sym = args[0]
-      self.my_each do |i|
+      total = self[0]
+      self[1..-1].my_each do |i|
         total = total.send(sym, i)
       end
 
