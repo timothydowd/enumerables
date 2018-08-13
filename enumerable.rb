@@ -133,11 +133,47 @@ module Enumerable
     count
   end
 
+  def my_map
+    return self.to enum unless block_given?
+
+    new_array = []
+    if self.class == Hash
+      self.my_each do |k,v|
+        new_array.push yield(k,v)
+      end
+      return new_array
+
+    else
+      self.my_each do |i|
+        new_array.push yield(i)
+      end
+      new_array
+    end
+
+  end
+
+  def my_inject(*args)
+    total = 0
+    if args[0].class == Symbol
+      sym = args[0]
+      self.my_each do |i|
+        total = total.send(sym, i)
+      end
+
+    else
+      args.length == 0 ? total = 0 : total = args[0]
+      self.my_each do |i|
+        total = yield(total,i)
+      end
+    end
+    total
+
+  end
+
   people = {"John" => 10, "Bob" => 7, "Sam" => 47, "Fred" => 34, "Billy" => 76}
   nums = [3,5,7,3,6,10,20,16]
 
-  puts people.my_count
-
+  puts nums.my_inject(:*)
 
 
 end
