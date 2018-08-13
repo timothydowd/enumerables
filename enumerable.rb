@@ -110,22 +110,33 @@ module Enumerable
 
   def my_count
     count = 0
-    if block_given?
-      self.my_each do |i|
-        count += 1 if yield(i)
+
+    if self.class == Hash
+      if block_given?
+        self.my_each do |k,v|
+          count += 1 if yield(k,v)
+        end
+      else
+        count = self.length
       end
+
     else
-      count = self.length
+      if block_given?
+        self.my_each do |i|
+          count += 1 if yield(i)
+        end
+      else
+        count = self.length
+      end
     end
 
     count
-
   end
 
-  people = {"John" => 10, "Bob" => 7, "Sam" => 47, "Fred" => 34}
+  people = {"John" => 10, "Bob" => 7, "Sam" => 47, "Fred" => 34, "Billy" => 76}
   nums = [3,5,7,3,6,10,20,16]
 
-  puts nums.my_count{|x| x.even?}
+  puts people.my_count
 
 
 
