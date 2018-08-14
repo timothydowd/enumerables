@@ -161,20 +161,30 @@ module Enumerable
         total = total.send(sym, i)
       end
 
-    else
-      args.length == 0 ? total = 0 : total = args[0]
+    elsif args.length != 0
+      total = args[0]
       self.my_each do |i|
         total = yield(total,i)
       end
-    end
-    total
 
+    else
+      total = self[0]
+      self[1..-1].my_each do |i|
+        total = yield(total,i)
+      end
+    end
+
+    total
   end
 
-  people = {"John" => 10, "Bob" => 7, "Sam" => 47, "Fred" => 34, "Billy" => 76}
-  nums = [3,5,7,3,6,10,20,16]
 
-  puts nums.my_inject(:*)
+  def multiply_els(array)
+    array.my_inject(1) {|tot,n| tot * n}
+  end
+
+
+
+  multiply_els([1,2,3])
 
 
 end
