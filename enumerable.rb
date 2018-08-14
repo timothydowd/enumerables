@@ -1,5 +1,6 @@
 module Enumerable
 
+
   def my_each
     return self.to enum unless block_given?
     if self.class == Hash
@@ -133,19 +134,21 @@ module Enumerable
     count
   end
 
-  def my_map
+  def my_map(&proc)
     return self.to enum unless block_given?
 
     new_array = []
     if self.class == Hash
       self.my_each do |k,v|
-        new_array.push yield(k,v)
+        #new_array.push yield(k,v)
+        new_array.push proc.call(k,v)
       end
       return new_array
 
     else
       self.my_each do |i|
-        new_array.push yield(i)
+        #new_array.push yield(i)
+        new_array.push proc.call(i)
       end
       new_array
     end
@@ -177,14 +180,14 @@ module Enumerable
     total
   end
 
-
-  def multiply_els(array)
-    array.my_inject(1) {|tot,n| tot * n}
-  end
-
-
-
-  multiply_els([1,2,3])
-
-
 end
+#module ends here
+
+
+def multiply_els(array)
+  array.my_inject {|tot,n| tot * n}
+end
+
+mult_three = Proc.new {|x| x*3}
+
+puts [1,2,3,4,5].my_map(&mult_three)
